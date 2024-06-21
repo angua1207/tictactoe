@@ -1,0 +1,23 @@
+.grid {
+  display: grid;
+  gap: 0; /* Enlever l'espace entre les cellules */
+  width: 100%; /* S'assurer que la grille prend toute la largeur */
+  max-width: 600px; /* Taille maximale pour limiter la grille */
+  margin: auto; /* Centrer la grille horizontalement */
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000;
+  cursor: pointer;
+  font-size: 24px;
+  background-color: #fff;
+  transition: background-color 0.2s;
+}
+
+.cell:hover {
+  background-color: #f0f0f0;
+}
