@@ -45,10 +45,13 @@ export class GridComponent implements OnInit {
     if (this.grid[row][col] === '') {
       this.grid[row][col] = this.playerSymbol;
       if (this.calculateWinner()) {
-        alert(`${this.playerSymbol} wins!`);
-        this.initGrid();
+        setTimeout(() => {
+          alert(`${this.playerSymbol} wins!`);
+          this.initGrid();
+        }, 500);
+      } else {
+        this.playerSymbol = this.playerSymbol === 'X' ? 'O' : 'X';
       }
-      this.playerSymbol = this.playerSymbol === 'X' ? 'O' : 'X';
     }
   }
 
