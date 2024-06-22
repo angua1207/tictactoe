@@ -1,9 +1,9 @@
 .grid {
   display: grid;
-  gap: 0; /* Enlever l'espace entre les cellules */
-  width: 100%; /* S'assurer que la grille prend toute la largeur */
-  max-width: 600px; /* Taille maximale pour limiter la grille */
-  margin: auto; /* Centrer la grille horizontalement */
+  gap: 0;
+  width: 100%;
+  max-width: 600px; 
+  margin: auto;
 }
 
 .cell {
@@ -17,7 +17,12 @@
   background-color: #fff;
   transition: background-color 0.2s;
 }
+.cell-x {
+  background-color: lightblue;
+  color: navy;
+}
 
-.cell:hover {
-  background-color: #f0f0f0;
+.cell-o {
+  background-color: lightcoral;
+  color: darkred;
 }

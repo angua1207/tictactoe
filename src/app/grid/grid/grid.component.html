@@ -1,11 +1,14 @@
-<button nbButton outline status="danger" (click)="initGrid()">Start new Game</button>
+<h1>Current Player: {{ currentPlayer }} </h1>
+<button mat-button color="warn" (click)="initGame()">Start New Game</button>
 
 <div class="grid" [ngStyle]="{'grid-template-columns': 'repeat(' + gridSize + ', 1fr)'}">
   <div *ngFor="let row of grid; let rowIndex = index" class="row">
-    <div *ngFor="let cell of row; let colIndex = index" 
-         class="cell" 
-         (click)="handleClick(rowIndex, colIndex)">
+    <div *ngFor="let cell of row; let colIndex = index"
+         class="cell"
+         [ngClass]="{'cell-x': cell === 'X', 'cell-o': cell === 'O'}"
+         (click)="makeAMove(rowIndex, colIndex)">
       {{ cell }}
     </div>
   </div>
 </div>
+

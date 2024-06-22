@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigPopupComponent } from '../../config/config-popup/config-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { PlayerSymbol } from '../../enum/playerSymbol';
+import { TicTacToeAI } from '../../AI/tictactoeAI';
 
 @Component({
   selector: 'app-grid',
@@ -12,14 +14,27 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './grid.component.css'
 })
 export class GridComponent implements OnInit {
+  private isAITurn = false;
+
   protected gridSize = 3;
   protected grid: any[][] = [];
-  protected playerSymbol = '';
+  protected playerSymbol = PlayerSymbol.X;
+  protected aiPlayer: TicTacToeAI | undefined;
+  protected currentPlayer = PlayerSymbol.X;
+
   public dialog = inject(MatDialog);
 
   ngOnInit() {
+    this.initGame();
+  }
+
+  initGame() {
     this.initGrid();
     this.openConfigPopup();
+  }
+
+  initGrid() {
+    this.grid = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''));
   }
 
   openConfigPopup(): void {
@@ -32,28 +47,55 @@ export class GridComponent implements OnInit {
       if (result) {        
         this.gridSize = Number.parseInt(result.gridSize);        
         this.playerSymbol = result.playerSymbol;
+        this.currentPlayer = this.playerSymbol;
+        this.aiPlayer = new TicTacToeAI( this.playerSymbol === PlayerSymbol.X ? PlayerSymbol.O : PlayerSymbol.X);        
         this.initGrid();
+        this.iaMakeAMove();
       } 
     });
   }
 
-  initGrid() {
-    this.grid = Array(this.gridSize).fill(null).map(() => Array(this.gridSize).fill(''));
+  makeAMove(row: number, col: number) {
+    if (this.grid[row][col] !== "") {
+      return;
+    }
+    this.grid[row][col] = this.isAITurn ? this.aiPlayer?.iaSymbol : this.playerSymbol;
+  
+    if (this.calculateWinner()) {
+      setTimeout(() => {
+        alert(`${this.isAITurn ? this.aiPlayer?.iaSymbol : this.playerSymbol} wins!`);
+        this.initGame();
+      }, 500);
+      return;
+    }
+  
+    if (this.isDraw()) {
+      setTimeout(() => {
+        alert("It's a draw!");
+        this.initGame();
+      }, 500);
+      return;
+    }
+  
+    this.isAITurn = !this.isAITurn;
+    this.currentPlayer = this.isAITurn ? this.aiPlayer!.iaSymbol : this.playerSymbol;
+  
+    if (this.isAITurn) {
+      this.iaMakeAMove();
+    }
   }
+  
 
-  handleClick(row: number, col: number) {
-    if (this.grid[row][col] === '') {
-      this.grid[row][col] = this.playerSymbol;
-      if (this.calculateWinner()) {
-        setTimeout(() => {
-          alert(`${this.playerSymbol} wins!`);
-          this.initGrid();
-        }, 500);
-      } else {
-        this.playerSymbol = this.playerSymbol === 'X' ? 'O' : 'X';
+  iaMakeAMove() {
+    const possibleMoves = this.getPossibleMoves();
+    if (possibleMoves.length > 0) {
+      const nextMove = this.aiPlayer?.playMove(possibleMoves);
+      if (nextMove) {
+        this.makeAMove(nextMove.row, nextMove.col);
       }
     }
   }
+  
 
   calculateWinner(): string | null {
     const size = this.gridSize;
@@ -87,5 +129,20 @@ export class GridComponent implements OnInit {
     }
 
     return null;
+  }
+  isDraw(): boolean {    
+    return this.getPossibleMoves().length === 0;
+  }
+  
+  getPossibleMoves(): { row: number, col: number }[] {
+    let possibleMoves: { row: number, col: number }[] = [];
+    for (let row = 0; row < this.gridSize; row++) {
+      for (let col = 0; col < this.gridSize; col++) {
+        if (this.grid[row][col] === "") {
+          possibleMoves.push({ row, col });
+        }
+      }
+    }
+    return possibleMoves;
   }
 }
