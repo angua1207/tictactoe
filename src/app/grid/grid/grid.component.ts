@@ -14,7 +14,7 @@ import { TicTacToeAI } from '../../AI/tictactoeAI';
   styleUrl: './grid.component.css'
 })
 export class GridComponent implements OnInit {
-  private isAITurn = false;
+  protected isAITurn = false;
 
   protected gridSize = 3;
   protected grid: any[][] = [];
@@ -81,8 +81,10 @@ export class GridComponent implements OnInit {
     this.currentPlayer = this.isAITurn ? this.aiPlayer!.iaSymbol : this.playerSymbol;
   
     if (this.isAITurn) {
-      this.iaMakeAMove();
-    }
+      setTimeout(() => {
+        this.iaMakeAMove();
+      }, 1000); // Ajout d'un délai de 1 seconde avant que l'IA joue
+    }  
   }
   
 

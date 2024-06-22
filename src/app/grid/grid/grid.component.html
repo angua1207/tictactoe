@@ -6,7 +6,7 @@
     <div *ngFor="let cell of row; let colIndex = index"
          class="cell"
          [ngClass]="{'cell-x': cell === 'X', 'cell-o': cell === 'O'}"
-         (click)="makeAMove(rowIndex, colIndex)">
+         (click)="!isAITurn && makeAMove(rowIndex, colIndex)">
       {{ cell }}
     </div>
   </div>
