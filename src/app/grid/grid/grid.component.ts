@@ -14,7 +14,7 @@ import { TicTacToeAI } from '../../AI/tictactoeAI';
   styleUrl: './grid.component.css'
 })
 export class GridComponent implements OnInit {
-  protected isAITurn = false;
+  protected isAITurn = true;
 
   protected gridSize = 3;
   protected grid: any[][] = [];
@@ -47,9 +47,8 @@ export class GridComponent implements OnInit {
       if (result) {        
         this.gridSize = Number.parseInt(result.gridSize);        
         this.playerSymbol = result.playerSymbol;
-        this.currentPlayer = this.playerSymbol;
-        this.aiPlayer = new TicTacToeAI( this.playerSymbol === PlayerSymbol.X ? PlayerSymbol.O : PlayerSymbol.X);        
-        this.initGrid();
+        this.aiPlayer = new TicTacToeAI( this.playerSymbol === PlayerSymbol.X ? PlayerSymbol.O : PlayerSymbol.X);  
+        this.currentPlayer = this.aiPlayer.iaSymbol;     
         this.iaMakeAMove();
       } 
     });
@@ -83,7 +82,7 @@ export class GridComponent implements OnInit {
     if (this.isAITurn) {
       setTimeout(() => {
         this.iaMakeAMove();
-      }, 1000); // Ajout d'un délai de 1 seconde avant que l'IA joue
+      }, 1000);
     }  
   }
   
