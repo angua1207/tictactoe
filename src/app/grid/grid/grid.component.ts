@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { ConfigPopupComponent } from '../../config/config-popup/config-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PlayerSymbol } from '../../enum/playerSymbol';
-import { TicTacToeAI } from '../../AI/tictactoeAI';
+import { RandomAiPlayer } from '../../AI/class/randomaiplayer';
+import { map } from 'rxjs';
+import { ConfigParameters } from '../../config/models/config.model';
 
 @Component({
   selector: 'app-grid',
@@ -19,7 +21,7 @@ export class GridComponent implements OnInit {
   protected gridSize = 3;
   protected grid: any[][] = [];
   protected playerSymbol = PlayerSymbol.X;
-  protected aiPlayer: TicTacToeAI | undefined;
+  protected randomAiPlayer: RandomAiPlayer | undefined;
   protected currentPlayer = PlayerSymbol.X;
 
   public dialog = inject(MatDialog);
@@ -45,24 +47,25 @@ export class GridComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {        
-        this.gridSize = Number.parseInt(result.gridSize);        
+        this.gridSize = Number.parseInt(result.gridSize);                
         this.playerSymbol = result.playerSymbol;
-        this.aiPlayer = new TicTacToeAI( this.playerSymbol === PlayerSymbol.X ? PlayerSymbol.O : PlayerSymbol.X);  
-        this.currentPlayer = this.aiPlayer.iaSymbol;     
+        this.randomAiPlayer = new RandomAiPlayer( this.playerSymbol === PlayerSymbol.X ? PlayerSymbol.O : PlayerSymbol.X);  
+        this.currentPlayer = this.randomAiPlayer.iaSymbol;
+        this.initGrid();   
         this.iaMakeAMove();
       } 
     });
   }
 
   makeAMove(row: number, col: number) {
-    if (this.grid[row][col] !== "") {
+    if (this.grid[row][col] !== PlayerSymbol.Empty) {
       return;
     }
-    this.grid[row][col] = this.isAITurn ? this.aiPlayer?.iaSymbol : this.playerSymbol;
+    this.grid[row][col] = this.isAITurn ? this.randomAiPlayer?.iaSymbol : this.playerSymbol;
   
     if (this.calculateWinner()) {
       setTimeout(() => {
-        alert(`${this.isAITurn ? this.aiPlayer?.iaSymbol : this.playerSymbol} wins!`);
+        alert(`${this.isAITurn ? this.randomAiPlayer?.iaSymbol : this.playerSymbol} wins!`);
         this.initGame();
       }, 500);
       return;
@@ -77,7 +80,7 @@ export class GridComponent implements OnInit {
     }
   
     this.isAITurn = !this.isAITurn;
-    this.currentPlayer = this.isAITurn ? this.aiPlayer!.iaSymbol : this.playerSymbol;
+    this.currentPlayer = this.isAITurn ? this.randomAiPlayer!.iaSymbol : this.playerSymbol;
   
     if (this.isAITurn) {
       setTimeout(() => {
@@ -90,7 +93,7 @@ export class GridComponent implements OnInit {
   iaMakeAMove() {
     const possibleMoves = this.getPossibleMoves();
     if (possibleMoves.length > 0) {
-      const nextMove = this.aiPlayer?.playMove(possibleMoves);
+      const nextMove = this.randomAiPlayer?.playMove(this.grid,possibleMoves);
       if (nextMove) {
         this.makeAMove(nextMove.row, nextMove.col);
       }

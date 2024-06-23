@@ -1,4 +1,5 @@
 export enum PlayerSymbol {
     X = 'X',
-    O = 'O'
+    O = 'O',
+    Empty = ''
   }
