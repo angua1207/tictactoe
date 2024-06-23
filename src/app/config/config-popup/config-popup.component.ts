@@ -3,7 +3,7 @@ import { Component, NgModule } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { PlayerSymbol } from '../../enum/playerSymbol';
+import { GridSize, PlayerSymbol } from '../../enum/playerSymbol';
 import { ConfigParameters } from '../models/config.model';
 
 
@@ -19,15 +19,14 @@ import { ConfigParameters } from '../models/config.model';
   ]
 })
 export class ConfigPopupComponent {
-  protected configParams : ConfigParameters | undefined;
-  protected gridSize = '3';
-  protected playerSymbol = PlayerSymbol.X;
-
-  constructor(public dialogRef: MatDialogRef<ConfigPopupComponent>) {}
+  protected configParams: ConfigParameters = new ConfigParameters();
   
-  startGame() {    
-    this.configParams!.gridSize = Number.parseInt(this.gridSize);
-    this.configParams!.playerSymbol = this.playerSymbol;
-    this.dialogRef.close({configParams : this.configParams });
+  constructor(public dialogRef: MatDialogRef<ConfigPopupComponent>) { }
+
+  startGame() {
+    this.dialogRef.close(this.configParams);
   }
+
+  PlayerSymbol = PlayerSymbol;
+  GridSize = GridSize;
 }

@@ -1,5 +1,5 @@
 <h1>Current Player: {{ currentPlayer }} </h1>
-<button mat-button color="warn" (click)="initGame()">Start New Game</button>
+<button mat-button color="warn" (click)="initGame()">Restart</button>
 
 <div class="grid" [ngStyle]="{'grid-template-columns': 'repeat(' + gridSize + ', 1fr)'}">
   <div *ngFor="let row of grid; let rowIndex = index" class="row">
