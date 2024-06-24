@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfigPopupComponent } from '../../config/config-popup/config-popup.component';
 import { MatDialog } from '@angular/material/dialog';
-import { PlayerSymbol, EmptySymbol, GridContent } from '../../enum/playerSymbol';
+import { PlayerSymbol, EmptySymbol, GridContent, GridSize } from '../../enum/playerSymbol';
 import { RandomAiPlayer } from '../../AI/class/randomaiplayer';
 import { map } from 'rxjs';
 import { ConfigParameters } from '../../config/models/config.model';
@@ -18,7 +18,7 @@ import { ConfigParameters } from '../../config/models/config.model';
 export class GridComponent implements OnInit {
   protected isAITurn = true;
 
-  protected gridSize = 3;
+  protected gridSize = Number.parseInt(GridSize.Three);
   protected grid: GridContent[][] = [];
   protected playerSymbol = PlayerSymbol.X;
   protected randomAiPlayer: RandomAiPlayer | undefined;
@@ -91,6 +91,7 @@ export class GridComponent implements OnInit {
 
 
   iaMakeAMove() {
+    this.isAITurn = true;
     const possibleMoves = this.getPossibleMoves();
     if (possibleMoves.length > 0) {
       const nextMove = this.randomAiPlayer?.playMove(this.grid, possibleMoves);
