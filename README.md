@@ -14,6 +14,7 @@ Make sure you have the following installed on your machine:
 1. Clone the repository:
     
    git clone https://github.com/angua1207/tictactoe
+   
    cd tictactoe
 
 3. Install the dependencies:
